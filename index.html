@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaja's Chicken Zone</title>
-    <!-- Razorpay Checkout Script -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -67,18 +65,6 @@
             color: white;
             box-sizing: border-box;
         }
-        .pay-btn {
-            background-color: #2ed573;
-            width: 100%;
-            font-size: 16px;
-            padding: 12px;
-            font-weight: bold;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
         .cod-btn {
             background-color: #ffa502;
             width: 100%;
@@ -120,9 +106,7 @@
         <input type="text" id="phone" placeholder="Phone Number *" required>
         <input type="text" id="address" placeholder="Complete Address *" required>
         
-        <!-- డైరెక్ట్ పేమెంట్ బటన్స్ -->
-        <button class="pay-btn" onclick="payWithRazorpay()">PAY ONLINE (Razorpay / UPI)</button>
-        <button class="cod-btn" onclick="placeCOD()">CASH ON DELIVERY (COD)</button>
+        <button class="cod-btn" onclick="placeCODOrder()">PLACE ORDER (CASH ON DELIVERY)</button>
     </div>
 
     <script>
@@ -137,7 +121,7 @@
             alert(itemName + " కార్ట్‌కి జోడించబడింది!");
         }
 
-        function payWithRazorpay() {
+        function placeCODOrder() {
             var name = document.getElementById('name').value;
             var phone = document.getElementById('phone').value;
             var address = document.getElementById('address').value;
@@ -147,41 +131,7 @@
                 return;
             }
 
-            var options = {
-                "key": "rzp_live_TMT03OyoVLSYZS",
-                "amount": currentPrice * 100,
-                "currency": "INR",
-                "name": "Kaja's Chicken Zone",
-                "description": "Payment for " + currentItem,
-                "handler": function (response){
-                    alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
-                },
-                "prefill": {
-                    "name": name,
-                    "contact": phone
-                },
-                "theme": {
-                    "color": "#d9534f"
-                }
-            };
-            var rzp1 = new Razorpay(options);
-            rzp1.on('payment.failed', function (response){
-                alert("Payment Failed: " + response.error.description);
-            });
-            rzp1.open();
-        }
-
-        function placeCOD() {
-            var name = document.getElementById('name').value;
-            var phone = document.getElementById('phone').value;
-            var address = document.getElementById('address').value;
-
-            if(!name || !phone || !address) {
-                alert("దయచేసి పేరు, ఫోన్ నంబర్ మరియు అడ్రస్ పూర్తిగా నింపండి!");
-                return;
-            }
-
-            alert("Order Placed Successfully via COD, Bhai! 🎉");
+            alert("🎉 ఆర్డర్ విజయవంతంగా ప్లేస్ చేయబడింది, భాయ్!\n\nపేరు: " + name + "\nఐటమ్: "  + currentItem + "\nమొత్తం: ₹" + currentPrice + "\n\n(Cash on Delivery ద్వారా డెలివరీ చేయబడుతుంది)");
         }
     </script>
 </body>
