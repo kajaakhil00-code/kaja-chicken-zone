@@ -1,545 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="te">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaja's Chicken Zone</title>
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #2b0a0a;
-            color: #fff;
+            background-color: #f4f4f9;
             margin: 0;
-            padding: 10px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #3b0f0f;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-        .header h2 {
-            margin: 0;
-            color: #ffcc00;
-            font-size: 16px;
-        }
-        .header-btns {
-            display: flex;
-            gap: 6px;
-        }
-        .view-cart-btn, .login-btn-nav {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 7px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: bold;
-        }
-        .login-btn-nav {
-            background: #27ae60;
-        }
-        .delivery-tag {
-            font-size: 12px;
-            color: #ff9999;
-            margin-bottom: 12px;
-            margin-left: 4px;
-        }
-        .search-box {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            background: #3b0f0f;
-            color: white;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        .products-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .card {
-            background: #3b0f0f;
-            border-radius: 10px;
-            padding: 10px;
-            text-align: left;
-            position: relative;
-        }
-        .badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: #f39c12;
-            color: #000;
-            font-size: 9px;
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-        .card img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        .card h4 {
-            margin: 8px 0 4px 0;
-            font-size: 13px;
-            color: #fff;
-        }
-        .rating-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 6px;
-            font-size: 11px;
-        }
-        .rating-badge {
-            background-color: #1e7e34;
-            color: white;
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 10px;
-        }
-        .time-text {
-            color: #bbb;
-        }
-        .cut-select {
-            width: 100%;
-            background: #2b0a0a;
-            color: #ffcc00;
-            border: 1px solid #5a1414;
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 11px;
-            margin-bottom: 8px;
-            box-sizing: border-box;
-        }
-        .old-price {
-            font-size: 11px;
-            color: #aaa;
-            text-decoration: line-through;
-            margin: 0;
-        }
-        .price-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .new-price-row {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .price {
-            color: #fff;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .discount {
-            font-size: 10px;
-            color: #2ecc71;
-            font-weight: bold;
-        }
-        .add-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        /* Modals */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            background: #3b0f0f;
             padding: 20px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 400px;
-            box-sizing: border-box;
+            text-align: center;
         }
-        .modal-content h3 {
-            margin-top: 0;
-            color: #ffcc00;
+        h1 {
+            color: #d9534f;
         }
-        .modal-content input, .modal-content select {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            background: #2b0a0a;
-            border: 1px solid #5a1414;
+        .menu-card {
+            background: white;
+            padding: 15px;
+            margin: 10px auto;
+            width: 300px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #5cb85c;
             color: white;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-        .gps-btn {
-            background: #b7950b;
-            color: black;
-            width: 100%;
-            padding: 10px;
-            border: 1px dashed #fff;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 5px 0 10px 0;
-        }
-        .checkout-btn, .action-btn {
-            background: #27ae60;
-            color: white;
-            width: 100%;
-            padding: 12px;
             border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 14px;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
         }
-        .remove-btn {
-            background: #c0392b;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
+        button:hover {
+            background-color: #4cae4c;
         }
     </style>
 </head>
 <body>
 
-    <!-- Main App Content -->
-    <div id="mainApp">
-        <div class="header">
-            <h2>🍗 Kaja's Zone</h2>
-            <div class="header-btns">
-                <button class="login-btn-nav" onclick="openLoginModal()" id="loginNavBtn">👤 Login</button>
-                <button class="view-cart-btn" onclick="openCheckout()">🛒 Cart (<span id="cartCount">0</span>)</button>
-            </div>
-        </div>
-        <div class="delivery-tag">📍 Delivery in 20-30 Mins</div>
+    <h1>Kaja's Chicken Zone 🍗</h1>
+    <p>ఫ్రెష్ అండ్ జ్యూసీ చికెన్ ఆర్డర్ చేయండి!</p>
 
-        <input type="text" class="search-box" placeholder="Search Fresh Chicken, Mutton, Fish...">
-
-        <div class="products-grid">
-            <!-- Item 1 -->
-            <div class="card">
-                <span class="badge">BESTSELLER</span>
-                <img src="https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=500" alt="Chicken">
-                <h4>Fresh Curry Cut Chicken</h4>
-                <div class="rating-row">
-                    <span class="rating-badge">⭐ 4.8</span>
-                    <span class="time-text">20-25 mins</span>
-                </div>
-                <select class="cut-select">
-                    <option>Curry Cut (Medium)</option>
-                    <option>Small Pieces</option>
-                </select>
-                <div class="old-price">₹220</div>
-                <div class="price-section">
-                    <div class="new-price-row">
-                        <span class="price">₹160</span>
-                        <span class="discount">27% OFF</span>
-                    </div>
-                    <button class="add-btn" onclick="addToCart('Fresh Curry Cut Chicken', 160)">ADD +</button>
-                </div>
-            </div>
-
-            <!-- Item 2 -->
-            <div class="card">
-                <span class="badge" style="background:#f39c12;">POPULAR 🍗</span>
-                <img src="https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=500" alt="Boneless">
-                <h4>Boneless Breast Cut</h4>
-                <div class="rating-row">
-                    <span class="rating-badge">⭐ 4.9</span>
-                    <span class="time-text">20-25 mins</span>
-                </div>
-                <select class="cut-select">
-                    <option>Curry Cut (Medium)</option>
-                    <option>Boneless Cubes</option>
-                </select>
-                <div class="old-price">₹290</div>
-                <div class="price-section">
-                    <div class="new-price-row">
-                        <span class="price">₹230</span>
-                        <span class="discount">20% OFF</span>
-                    </div>
-                    <button class="add-btn" onclick="addToCart('Boneless Breast Cut', 230)">ADD +</button>
-                </div>
-            </div>
-
-            <!-- Item 3 -->
-            <div class="card">
-                <span class="badge" style="background:#e74c3c; color:white;">PREMIUM 🥩</span>
-                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=500" alt="Mutton">
-                <h4>Tender Mutton Curry Cut</h4>
-                <div class="rating-row">
-                    <span class="rating-badge">⭐ 4.7</span>
-                    <span class="time-text">25-30 mins</span>
-                </div>
-                <select class="cut-select">
-                    <option>Curry Cut (Medium)</option>
-                    <option>Boneless Mutton</option>
-                </select>
-                <div class="old-price">₹550</div>
-                <div class="price-section">
-                    <div class="new-price-row">
-                        <span class="price">₹450</span>
-                        <span class="discount">18% OFF</span>
-                    </div>
-                    <button class="add-btn" onclick="addToCart('Tender Mutton Curry Cut', 450)">ADD +</button>
-                </div>
-            </div>
-
-            <!-- Item 4 -->
-            <div class="card">
-                <span class="badge" style="background:#3498db; color:white;">FRESH CATCH 🐟</span>
-                <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=500" alt="Fish">
-                <h4>Fresh Water Fish (Korrameenu)</h4>
-                <div class="rating-row">
-                    <span class="rating-badge">⭐ 4.6</span>
-                    <span class="time-text">25-30 mins</span>
-                </div>
-                <select class="cut-select">
-                    <option>Whole Fish / Cut</option>
-                    <option>Fillet Pieces</option>
-                </select>
-                <div class="old-price">₹400</div>
-                <div class="price-section">
-                    <div class="new-price-row">
-                        <span class="price">₹320</span>
-                        <span class="discount">20% OFF</span>
-                    </div>
-                    <button class="add-btn" onclick="addToCart('Fresh Water Fish', 320)">ADD +</button>
-                </div>
-            </div>
-        </div>
+    <!-- మెనూ ఐటమ్ -->
+    <div class="menu-card">
+        <h3>Fresh Chicken (1 Kg)</h3>
+        <p>ధర: ₹250/-</p>
+        <button onclick="startPayment()">ఆర్డర్ & పేమెంట్ చేయండి</button>
     </div>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <h3>📱 Phone Login (OTP)</h3>
-            <p style="font-size: 12px; color: #ff9999;">Enter your phone number to sign in securely.</p>
-            
-            <input type="tel" id="userPhoneInput" placeholder="Phone Number (e.g., 6302650033)">
-            <button class="action-btn" onclick="sendOTP()">Send OTP</button>
-
-            <div id="otpSection" style="display:none; margin-top: 15px;">
-                <input type="text" id="otpInput" placeholder="Enter 6-digit OTP">
-                <button class="action-btn" style="background:#2980b9;" onclick="verifyOTP()">Verify OTP</button>
-            </div>
-
-            <div id="recaptcha-container" style="margin-top: 10px;"></div>
-
-            <button onclick="closeLoginModal()" style="background:none; border:none; color:#aaa; width:100%; margin-top:12px; cursor:pointer;">Close</button>
-        </div>
-    </div>
-
-    <!-- Checkout Modal -->
-    <div id="checkoutModal" class="modal">
-        <div class="modal-content">
-            <h3>Your Cart & Checkout</h3>
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #2b0a0a; padding: 8px; border-radius: 6px; margin-bottom: 10px;">
-                <span id="cartItemName" style="font-size: 13px;">No item selected</span>
-                <button class="remove-btn" onclick="clearCart()">Remove X</button>
-            </div>
-            
-            <p style="margin: 5px 0; font-size: 14px;">Grand Total: <span id="grandTotal" style="color:#ffcc00; font-weight:bold;">₹0</span></p>
-            
-            <input type="text" id="fullName" placeholder="Full Name *">
-            <input type="tel" id="phoneNumber" placeholder="Phone Number *">
-            <input type="text" id="address" placeholder="Complete Address *">
-            
-            <button class="gps-btn" onclick="getGPSLocation()">📍 Share Live GPS Location</button>
-
-            <select id="paymentMethod">
-                <option value="Cash on Delivery">Cash on Delivery (COD)</option>
-                <option value="Online UPI Payment">Online UPI Payment</option>
-            </select>
-
-            <button class="checkout-btn" onclick="placeOrder()">PLACE ORDER NOW</button>
-            <button onclick="closeCheckout()" style="background:none; border:none; color:#aaa; width:100%; margin-top:8px; cursor:pointer;">Close</button>
-        </div>
-    </div>
-
-    <!-- Script Section -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCNiYPiici8jXntfa3L7yhaashHEqmgzGo",
-            authDomain: "fresh-chicken-d404f.firebaseapp.com",
-            projectId: "fresh-chicken-d404f",
-            storageBucket: "fresh-chicken-d404f.appspot.com",
-            messagingSenderId: "241407573599",
-            appId: "1:241407573599:web:62ef38ddcf4341adcee5ea",
-            measurementId: "G-B7CBGLJQR5"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        let selectedProduct = null;
-        let userLocation = "Not shared";
-        let confirmationResultObj = null;
-
-        // Make functions globally accessible safely
-        window.addToCart = function(name, price) {
-            selectedProduct = { name, price };
-            document.getElementById('cartCount').innerText = "1";
-            document.getElementById('cartItemName').innerText = `${name} - ₹${price}`;
-            document.getElementById('grandTotal').innerText = `₹${price}`;
-            alert(name + " added to cart, Bhai!");
-        }
-
-        window.clearCart = function() {
-            selectedProduct = null;
-            document.getElementById('cartCount').innerText = "0";
-            document.getElementById('cartItemName').innerText = "No item selected";
-            document.getElementById('grandTotal').innerText = "₹0";
-        }
-
-        window.openCheckout = function() {
-            if(!selectedProduct) {
-                alert("Please add an item to cart first, Bhai!");
-                return;
-            }
-            document.getElementById('checkoutModal').style.display = 'flex';
-        }
-
-        window.closeCheckout = function() {
-            document.getElementById('checkoutModal').style.display = 'none';
-        }
-
-        window.openLoginModal = function() {
-            document.getElementById('loginModal').style.display = 'flex';
-            if (!window.recaptchaVerifier) {
-                try {
-                    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-                        'size': 'invisible'
-                    });
-                    window.recaptchaVerifier.render().catch(err => console.log(err));
-                } catch (e) {
-                    console.log("Recaptcha error:", e);
+    <script>
+        function startPayment() {
+            var options = {
+                "key": "Rzp_live_TMT03OyoVLSYZS", // నీ లైవ్ రేజర్‌పే కీ
+                "amount": "25000", // 250 రూపాయలు (పైసాలో)
+                "currency": "INR",
+                "name": "Kaja's Chicken Zone",
+                "description": "Chicken Purchase Payment",
+                "handler": function (response){
+                    alert("సక్సెస్! పేమెంట్ ఐడి: " + response.razorpay_payment_id);
+                    // పేమెంట్ సక్సెస్ అయ్యాక డేటాబేస్‌లో సేవ్ చేసుకునే కోడ్ ఇక్కడ రాసుకోవచ్చు
+                },
+                "prefill": {
+                    "name": "Kaja",
+                    "email": "kaja@example.com",
+                    "contact": "9876543210"
+                },
+                "theme": {
+                    "color": "#d9534f"
                 }
-            }
-        }
-
-        window.closeLoginModal = function() {
-            document.getElementById('loginModal').style.display = 'none';
-        }
-
-        window.sendOTP = function() {
-            let phoneNumber = document.getElementById('userPhoneInput').value.trim();
-            if(!phoneNumber) {
-                alert("దయచేసి ఫోన్ నంబర్ ఎంటర్ చేయండి భాయ్!");
-                return;
-            }
-
-            if(!phoneNumber.startsWith('+')) {
-                if(phoneNumber.length === 10) {
-                    phoneNumber = '+91' + phoneNumber;
-                } else {
-                    phoneNumber = '+' + phoneNumber;
-                }
-            }
-
-            const appVerifier = window.recaptchaVerifier;
-            signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-                .then((confirmationResult) => {
-                    confirmationResultObj = confirmationResult;
-                    alert("OTP sent successfully to " + phoneNumber);
-                    document.getElementById('otpSection').style.display = 'block';
-                }).catch((error) => {
-                    console.error("SMS error", error);
-                    alert("Error sending OTP: " + error.message);
-                });
-        }
-
-        window.verifyOTP = function() {
-            const code = document.getElementById('otpInput').value;
-            if(!code) {
-                alert("దయచేసి OTP ఎంటర్ చేయండి భాయ్!");
-                return;
-            }
-
-            confirmationResultObj.confirm(code).then((result) => {
-                alert("Login Successful, Bhai! 🎉");
-                document.getElementById('loginNavBtn').innerText = "✅ Logged In";
-                closeLoginModal();
-            }).catch((error) => {
-                alert("Invalid OTP! Try again.");
-            });
-        }
-
-        window.getGPSLocation = function() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((position) => {
-                    userLocation = `Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`;
-                    alert("GPS Location fetched successfully, Bhai! 📍");
-                }, () => {
-                    alert("Unable to retrieve your location.");
-                });
-            } else {
-                alert("Geolocation is not supported.");
-            }
-        }
-
-        window.placeOrder = async function() {
-            const name = document.getElementById('fullName').value;
-            const phone = document.getElementById('phoneNumber').value;
-            const address = document.getElementById('address').value;
-            const payment = document.getElementById('paymentMethod').value;
-
-            if(!name || !phone || !address) {
-                alert("దయచేసి అన్ని వివరాలు (Name, Phone, Address) నింపండి భాయ్!");
-                return;
-            }
-
-            try {
-                await addDoc(collection(db, "orders"), {
-                    customerName: name,
-                    phone: phone,
-                    address: address,
-                    location: userLocation,
-                    chickenType: selectedProduct.name,
-                    price: selectedProduct.price,
-                    paymentMethod: payment,
-                    orderTime: new Date().toLocaleString()
-                });
-
-                alert("Order Placed Successfully, Bhai! 🎉");
-                closeCheckout();
-                clearCart();
-            } catch (error) {
-                console.error("Error: ", error);
-                alert("Error placing order. Try again!");
-            }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
         }
     </script>
+
 </body>
 </html>
+
+                    
