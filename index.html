@@ -9,34 +9,74 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #1a0505;
+            color: white;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             text-align: center;
         }
         h1 {
             color: #d9534f;
         }
+        .menu-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px;
+        }
         .menu-card {
-            background: white;
+            background: #2b0c0c;
             padding: 15px;
-            margin: 10px auto;
-            width: 300px;
+            width: 280px;
             border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+            text-align: left;
+        }
+        .menu-card h3 {
+            margin: 0 0 10px 0;
+            color: #ffcc00;
         }
         button {
-            background-color: #5cb85c;
+            background-color: #ff4757;
             color: white;
             border: none;
-            padding: 10px 15px;
-            font-size: 16px;
+            padding: 8px 12px;
+            font-size: 14px;
             border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
         }
-        button:hover {
-            background-color: #4cae4c;
+        .checkout-box {
+            background: #2b0c0c;
+            padding: 20px;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
+            text-align: left;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.8);
+        }
+        .checkout-box input, .checkout-box select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background: #1a0505;
+            color: white;
+            box-sizing: border-box;
+        }
+        .place-order-btn {
+            background-color: #2ed573;
+            width: 100%;
+            font-size: 16px;
+            padding: 12px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -45,40 +85,90 @@
     <h1>Kaja's Chicken Zone 🍗</h1>
     <p>ఫ్రెష్ అండ్ జ్యూసీ చికెన్ ఆర్డర్ చేయండి!</p>
 
-    <!-- మెనూ ఐటమ్ -->
-    <div class="menu-card">
-        <h3>Fresh Chicken (1 Kg)</h3>
-        <p>ధర: ₹250/-</p>
-        <button onclick="startPayment()">ఆర్డర్ & పేమెంట్ చేయండి</button>
+    <div class="menu-container">
+        <div class="menu-card">
+            <h3>Fresh Curry Cut Chicken</h3>
+            <p>ధర: ₹160/-</p>
+            <button onclick="addToCart('Fresh Curry Cut Chicken', 160)">ADD +</button>
+        </div>
+        <div class="menu-card">
+            <h3>Boneless Breast Cut</h3>
+            <p>ధర: ₹230/-</p>
+            <button onclick="addToCart('Boneless Breast Cut', 230)">ADD +</button>
+        </div>
+    </div>
+
+    <div class="checkout-box">
+        <h3>Your Cart & Checkout</h3>
+        <p id="cart-item">Fresh Curry Cut Chicken - ₹160</p>
+        <p><strong>Grand Total: ₹<span id="grand-total">160</span></strong></p>
+
+        <input type="text" id="name" placeholder="Full Name *" required>
+        <input type="text" id="phone" placeholder="Phone Number *" required>
+        <input type="text" id="address" placeholder="Complete Address *" required>
+        
+        <select id="payment-mode">
+            <option value="online">Online UPI / Razorpay Payment</option>
+            <option value="cod">Cash on Delivery (COD)</option>
+        </select>
+
+        <button class="place-order-btn" onclick="placeOrder()">PLACE ORDER NOW</button>
     </div>
 
     <script>
-        function startPayment() {
-            var options = {
-                "key": "Rzp_live_TMT03OyoVLSYZS", // నీ లైవ్ రేజర్‌పే కీ
-                "amount": "25000", // 250 రూపాయలు (పైసాలో)
-                "currency": "INR",
-                "name": "Kaja's Chicken Zone",
-                "description": "Chicken Purchase Payment",
-                "handler": function (response){
-                    alert("సక్సెస్! పేమెంట్ ఐడి: " + response.razorpay_payment_id);
-                    // పేమెంట్ సక్సెస్ అయ్యాక డేటాబేస్‌లో సేవ్ చేసుకునే కోడ్ ఇక్కడ రాసుకోవచ్చు
-                },
-                "prefill": {
-                    "name": "Kaja",
-                    "email": "kaja@example.com",
-                    "contact": "9876543210"
-                },
-                "theme": {
-                    "color": "#d9534f"
+        let currentItem = "Fresh Curry Cut Chicken";
+        let currentPrice = 160;
+
+        function addToCart(itemName, itemPrice) {
+            currentItem = itemName;
+            currentPrice = itemPrice;
+            document.getElementById('cart-item').innerText = itemName + " - ₹" + itemPrice;
+            document.getElementById('grand-total').innerText = itemPrice;
+            alert(itemName + " కార్ట్‌కి జోడించబడింది!");
+        }
+
+        function placeOrder() {
+            var name = document.getElementById('name').value;
+            var phone = document.getElementById('phone').value;
+            var address = document.getElementById('address').value;
+            var paymentMode = document.getElementById('payment-mode').value;
+
+            if(!name || !phone || !address) {
+                alert("దయచేసి పేరు, ఫోన్ నంబర్ మరియు అడ్రస్ పూర్తిగా నింపండి!");
+                return;
+            }
+
+            if(paymentMode === 'online') {
+                try {
+                    var options = {
+                        "key": "Rzp_live_TMT03OyoVLSYZS",
+                        "amount": currentPrice * 100,
+                        "currency": "INR",
+                        "name": "Kaja's Chicken Zone",
+                        "description": "Payment for " + currentItem,
+                        "handler": function (response){
+                            alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                        },
+                        "prefill": {
+                            "name": name,
+                            "contact": phone
+                        },
+                        "theme": {
+                            "color": "#d9534f"
+                        }
+                    };
+                    var rzp1 = new Razorpay(options);
+                    rzp1.on('payment.failed', function (response){
+                        alert("Payment Failed: " + response.error.description);
+                    });
+                    rzp1.open();
+                } catch(err) {
+                    alert("Razorpay Error: " + err.message);
                 }
-            };
-            var rzp1 = new Razorpay(options);
-            rzp1.open();
+            } else {
+                alert("Order Placed Successfully via COD, Bhai! 🎉");
+            }
         }
     </script>
-
 </body>
 </html>
-
-                    
