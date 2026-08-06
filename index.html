@@ -57,7 +57,7 @@
             text-align: left;
             box-shadow: 0px 0px 15px rgba(0,0,0,0.8);
         }
-        .checkout-box input, .checkout-box select {
+        .checkout-box input {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
@@ -67,7 +67,7 @@
             color: white;
             box-sizing: border-box;
         }
-        .place-order-btn {
+        .pay-btn {
             background-color: #2ed573;
             width: 100%;
             font-size: 16px;
@@ -77,6 +77,19 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-top: 10px;
+        }
+        .cod-btn {
+            background-color: #ffa502;
+            width: 100%;
+            font-size: 16px;
+            padding: 12px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -107,12 +120,9 @@
         <input type="text" id="phone" placeholder="Phone Number *" required>
         <input type="text" id="address" placeholder="Complete Address *" required>
         
-        <select id="payment-mode">
-            <option value="online">Online UPI / Razorpay Payment</option>
-            <option value="cod">Cash on Delivery (COD)</option>
-        </select>
-
-        <button class="place-order-btn" onclick="placeOrder()">PLACE ORDER NOW</button>
+        <!-- డైరెక్ట్ పేమెంట్ బటన్స్ -->
+        <button class="pay-btn" onclick="payWithRazorpay()">PAY ONLINE (Razorpay / UPI)</button>
+        <button class="cod-btn" onclick="placeCOD()">CASH ON DELIVERY (COD)</button>
     </div>
 
     <script>
@@ -127,47 +137,51 @@
             alert(itemName + " కార్ట్‌కి జోడించబడింది!");
         }
 
-        function placeOrder() {
+        function payWithRazorpay() {
             var name = document.getElementById('name').value;
             var phone = document.getElementById('phone').value;
             var address = document.getElementById('address').value;
-            var paymentMode = document.getElementById('payment-mode').value;
 
             if(!name || !phone || !address) {
                 alert("దయచేసి పేరు, ఫోన్ నంబర్ మరియు అడ్రస్ పూర్తిగా నింపండి!");
                 return;
             }
 
-            if(paymentMode === 'online') {
-                try {
-                    var options = {
-                        "key": "Rzp_live_TMT03OyoVLSYZS",
-                        "amount": currentPrice * 100,
-                        "currency": "INR",
-                        "name": "Kaja's Chicken Zone",
-                        "description": "Payment for " + currentItem,
-                        "handler": function (response){
-                            alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
-                        },
-                        "prefill": {
-                            "name": name,
-                            "contact": phone
-                        },
-                        "theme": {
-                            "color": "#d9534f"
-                        }
-                    };
-                    var rzp1 = new Razorpay(options);
-                    rzp1.on('payment.failed', function (response){
-                        alert("Payment Failed: " + response.error.description);
-                    });
-                    rzp1.open();
-                } catch(err) {
-                    alert("Razorpay Error: " + err.message);
+            var options = {
+                "key": "Rzp_live_TMT03OyoVLSYZS",
+                "amount": currentPrice * 100,
+                "currency": "INR",
+                "name": "Kaja's Chicken Zone",
+                "description": "Payment for " + currentItem,
+                "handler": function (response){
+                    alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                },
+                "prefill": {
+                    "name": name,
+                    "contact": phone
+                },
+                "theme": {
+                    "color": "#d9534f"
                 }
-            } else {
-                alert("Order Placed Successfully via COD, Bhai! 🎉");
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.on('payment.failed', function (response){
+                alert("Payment Failed: " + response.error.description);
+            });
+            rzp1.open();
+        }
+
+        function placeCOD() {
+            var name = document.getElementById('name').value;
+            var phone = document.getElementById('phone').value;
+            var address = document.getElementById('address').value;
+
+            if(!name || !phone || !address) {
+                alert("దయచేసి పేరు, ఫోన్ నంబర్ మరియు అడ్రస్ పూర్తిగా నింపండి!");
+                return;
             }
+
+            alert("Order Placed Successfully via COD, Bhai! 🎉");
         }
     </script>
 </body>
