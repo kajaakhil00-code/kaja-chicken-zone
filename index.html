@@ -330,6 +330,7 @@
             </div>
         </div>
     </div>
+
     <!-- Login Modal -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
@@ -345,6 +346,7 @@
             <button onclick="closeLoginModal()" style="background:none; border:none; color:#aaa; width:100%; margin-top:12px; cursor:pointer;">Close</button>
         </div>
     </div>
+
     <!-- Checkout Modal -->
     <div id="checkoutModal" class="modal">
         <div class="modal-content">
@@ -366,7 +368,8 @@
             <button onclick="closeCheckout()" style="background:none; border:none; color:#aaa; width:100%; margin-top:8px; cursor:pointer;">Close</button>
         </div>
     </div>
-        <!-- Script Section -->
+
+    <!-- Script Section -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -508,7 +511,7 @@
                         alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
                         await saveOrderToDB(name, phone, address, "Razorpay Online (" + response.razorpay_payment_id + ")");
                     },
-                    "prefill": {
+                                        "prefill": {
                         "name": name,
                         "contact": phone
                     },
@@ -522,30 +525,4 @@
                 await saveOrderToDB(name, phone, address, "Cash on Delivery (COD)");
             }
         }
-
-        async function saveOrderToDB(name, phone, address, paymentMethod) {
-            try {
-                await addDoc(collection(db, "orders"), {
-                    customerName: name,
-                    phone: phone,
-                    address: address,
-                    location: userLocation,
-                    chickenType: selectedProduct.name,
-                    price: selectedProduct.price,
-                    paymentMethod: paymentMethod,
-                    orderTime: new Date().toLocaleString()
-                });
-                alert("Order Placed Successfully, Bhai! 🎉");
-                closeCheckout();
-                clearCart();
-            } catch (error) {
-                console.error("Error: ", error);
-                alert("Error placing order. Try again!");
-            }
-        }
-    </script>
-
-
-
-    
-    
+        
