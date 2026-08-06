@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaja's Chicken Zone</title>
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -358,7 +360,7 @@
             <button class="gps-btn" onclick="getGPSLocation()">📍 Share Live GPS Location</button>
             <select id="paymentMethod">
                 <option value="Cash on Delivery">Cash on Delivery (COD)</option>
-                <option value="Online UPI Payment">Online UPI Payment</option>
+                <option value="Razorpay Online Payment">Razorpay Online Payment (UPI/Cards)</option>
             </select>
             <button class="checkout-btn" onclick="placeOrder()">PLACE ORDER NOW</button>
             <button onclick="closeCheckout()" style="background:none; border:none; color:#aaa; width:100%; margin-top:8px; cursor:pointer;">Close</button>
@@ -482,27 +484,17 @@
                 alert("దయచేసి అన్ని వివరాలు (Name, Phone, Address) నింపండి భాయ్!");
                 return;
             }
-            try {
-                await addDoc(collection(db, "orders"), {
-                    customerName: name,
-                    phone: phone,
-                    address: address,
-                    location: userLocation,
-                    chickenType: selectedProduct.name,
-                    price: selectedProduct.price,
-                    paymentMethod: payment,
-                    orderTime: new Date().toLocaleString()
-                });
-                alert("Order Placed Successfully, Bhai! 🎉");
-                closeCheckout();
-                clearCart();
-            } catch (error) {
-                console.error("Error: ", error);
-                alert("Error placing order. Try again!");
-            }
-        }
-    </script>
-</body>
-                    </html>
-
-                    
+            if(payment === "Razorpay Online Payment") {
+                var options = {
+                    "key": "rzp_test_YourTestKeyHere", // ఇక్కడ మీ రేజర్‌పే టెస్ట్ కీ లేదా లైవ్ కీ వేసుకోవచ్చు
+                    "amount": selectedProduct.price * 100, 
+                    "currency": "INR",
+                    "name": "Kaja's Chicken Zone",
+                    "description": "Order for " + selectedProduct.name,
+                    "handler": async function (response){
+                        alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+                        await saveOrderToDB(name, phone, address, "Razorpay Online (" + response.razorpay_payment_id + ")");
+                    },
+                    "prefill": {
+                        "name": name,
+         
