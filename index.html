@@ -3,526 +3,442 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaja's Chicken Zone</title>
-    <!-- Razorpay Checkout Script -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <title>Kaja's Zone</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #2b0a0a;
+        }
+        body {
+            background-color: #120204;
             color: #fff;
-            margin: 0;
-            padding: 10px;
+            padding-bottom: 70px;
         }
-        .header {
+
+        /* Swiggy Style Phone Auth Screen */
+        #auth-screen {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: #3b0f0f;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            justify-content: center;
+            height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5af19, #f12711);
         }
-        .header h2 {
-            margin: 0;
-            color: #ffcc00;
-            font-size: 16px;
+        .auth-card {
+            width: 100%;
+            max-width: 360px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            color: #333;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
-        .header-btns {
-            display: flex;
-            gap: 6px;
+        .auth-card h2 {
+            text-align: center;
+            color: #f12711;
+            margin-bottom: 5px;
         }
-        .view-cart-btn, .login-btn-nav {
-            background: #e74c3c;
+        .auth-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+            font-size: 15px;
+            background: #fff;
+            color: #333;
+        }
+        .auth-input:focus {
+            border-color: #f12711;
+        }
+        .primary-auth-btn {
+            background: linear-gradient(135deg, #f5af19, #f12711);
             color: white;
             border: none;
-            padding: 7px 10px;
+            padding: 12px;
+            width: 100%;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+        .google-btn {
+            background-color: #db4437;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 14px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 11px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .toggle-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #f12711;
+            cursor: pointer;
             font-weight: bold;
         }
-        .login-btn-nav {
-            background: #27ae60;
+        .hidden-form {
+            display: none;
         }
-        .delivery-tag {
-            font-size: 12px;
-            color: #ff9999;
+
+        /* Main App Interface */
+        #main-app-container {
+            display: none;
+            padding: 12px;
+        }
+
+        .app-header {
             margin-bottom: 12px;
-            margin-left: 4px;
+        }
+        .brand-title {
+            color: #e60023;
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .delivery-info {
+            color: #d32f2f;
+            font-size: 13px;
+            margin-top: 4px;
         }
         .search-box {
             width: 100%;
-            padding: 12px;
+            background: #200508;
+            border: 1px solid #3d0c11;
+            padding: 10px 14px;
             border-radius: 8px;
-            border: none;
-            background: #3b0f0f;
-            color: white;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            font-size: 14px;
+            color: #ccc;
+            font-size: 13px;
+            margin-top: 10px;
+            outline: none;
         }
-        .products-grid {
+
+        /* Product Grid */
+        .product-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
+            margin-top: 12px;
         }
-        .card {
-            background: #3b0f0f;
-            border-radius: 10px;
-            padding: 10px;
-            text-align: left;
+        .product-card {
+            background: #24070a;
+            border: 1px solid #3d0c11;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .image-container {
             position: relative;
+            width: 100%;
+            height: 110px;
+        }
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .badge {
             position: absolute;
-            top: 15px;
-            left: 15px;
-            background: #f39c12;
-            color: #000;
+            top: 6px;
+            left: 6px;
             font-size: 9px;
-            padding: 3px 6px;
-            border-radius: 4px;
             font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
         }
-        .card img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        .card h4 {
-            margin: 8px 0 4px 0;
-            font-size: 13px;
-            color: #fff;
-        }
-        .rating-row {
+        .badge-bestseller { background: #ff9900; color: #000; }
+        .badge-popular { background: #ff0055; color: #fff; }
+        .badge-premium { background: #d32f2f; color: #fff; }
+        .badge-fresh { background: #00bcd4; color: #fff; }
+
+        .card-details {
+            padding: 8px;
             display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 6px;
-            font-size: 11px;
+            flex-direction: column;
+            flex: 1;
+            justify-content: space-between;
         }
-        .rating-badge {
-            background-color: #1e7e34;
-            color: white;
-            padding: 2px 5px;
-            border-radius: 4px;
+        .product-title {
+            font-size: 13px;
             font-weight: bold;
-            font-size: 10px;
+            color: #fff;
+            margin-bottom: 4px;
         }
-        .time-text {
-            color: #bbb;
+        .rating-time {
+            display: inline-flex;
+            align-items: center;
+            background: #0d4218;
+            color: #4caf50;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            width: fit-content;
+            margin-bottom: 6px;
         }
         .cut-select {
             width: 100%;
-            background: #2b0a0a;
-            color: #ffcc00;
-            border: 1px solid #5a1414;
-            padding: 5px;
-            border-radius: 5px;
+            background: #180305;
+            border: 1px solid #3d0c11;
+            color: #ccc;
             font-size: 11px;
+            padding: 4px;
+            border-radius: 4px;
             margin-bottom: 8px;
-            box-sizing: border-box;
+        }
+        .price-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
         }
         .old-price {
-            font-size: 11px;
-            color: #aaa;
             text-decoration: line-through;
-            margin: 0;
-        }
-        .price-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .new-price-row {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .price {
-            color: #fff;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .discount {
+            color: #888;
             font-size: 10px;
-            color: #2ecc71;
+        }
+        .current-price {
+            font-size: 15px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .discount-tag {
+            color: #4caf50;
+            font-size: 10px;
             font-weight: bold;
         }
         .add-btn {
-            background: #e74c3c;
+            background: #e60023;
             color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
-            cursor: pointer;
+            padding: 6px 10px;
+            font-size: 11px;
             font-weight: bold;
-            font-size: 12px;
+            border-radius: 6px;
+            cursor: pointer;
         }
+
+        /* Navigation Bar */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #180305;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            border-top: 1px solid #3d0c11;
+            z-index: 99;
+        }
+        .nav-item {
+            color: #aaa;
+            cursor: pointer;
+            text-align: center;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .nav-item.active {
+            color: #e60023;
+        }
+
         /* Modals */
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.85);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            padding: 20px;
+            z-index: 100;
+            overflow-y: auto;
         }
         .modal-content {
-            background: #3b0f0f;
+            background: #1e0508;
             padding: 20px;
             border-radius: 12px;
-            width: 90%;
             max-width: 400px;
-            box-sizing: border-box;
+            margin: 40px auto;
+            border: 1px solid #3d0c11;
         }
-        .modal-content h3 {
-            margin-top: 0;
-            color: #ffcc00;
-        }
-        .modal-content input, .modal-content select {
+        input, select, textarea {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
-            background: #2b0a0a;
-            border: 1px solid #5a1414;
-            color: white;
+            background: #2b080c;
+            border: 1px solid #4a1215;
+            color: #fff;
             border-radius: 6px;
-            box-sizing: border-box;
         }
-        .gps-btn {
-            background: #b7950b;
-            color: black;
-            width: 100%;
-            padding: 10px;
-            border: 1px dashed #fff;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 5px 0 10px 0;
-        }
-        .checkout-btn, .action-btn {
-            background: #27ae60;
+        .primary-btn {
+            background-color: #e60023;
             color: white;
-            width: 100%;
-            padding: 12px;
             border: none;
+            padding: 10px;
+            width: 100%;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 14px;
             cursor: pointer;
             margin-top: 10px;
-        }
-        .remove-btn {
-            background: #c0392b;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
         }
     </style>
 </head>
 <body>
-    <!-- Main App Content -->
-    <div id="mainApp">
-        <div class="header">
+
+    <!-- Phone Auth Screen -->
+    <div id="auth-screen">
+        <div class="auth-card">
             <h2>🍗 Kaja's Zone</h2>
-            <div class="header-btns">
-                <button class="login-btn-nav" onclick="openLoginModal()" id="loginNavBtn">👤 Login</button>
-                <button class="view-cart-btn" onclick="openCheckout()">🛒 Cart (<span id="cartCount">0</span>)</button>
+            <p style="text-align: center; color: #666; font-size: 13px; margin-bottom: 15px;">Login with Phone Number</p>
+            
+            <!-- Step 1: Phone Input -->
+            <div id="phone-input-box">
+                <input type="tel" id="user-phone" class="auth-input" placeholder="Enter 10-digit Mobile Number" maxlength="10">
+                <button class="primary-auth-btn" onclick="sendOTP()">Send OTP</button>
+                <div id="recaptcha-container" style="margin-top: 10px; display: flex; justify-content: center;"></div>
             </div>
+
+            <!-- Step 2: OTP Input -->
+            <div id="otp-input-box" class="hidden-form">
+                <p style="font-size: 12px; color: #444; margin-bottom: 8px; text-align: center;">Enter 6-digit OTP sent to your phone</p>
+                <input type="text" id="user-otp" class="auth-input" placeholder="Enter 6-digit OTP" maxlength="6">
+                <button class="primary-auth-btn" onclick="verifyOTP()">Verify & Login</button>
+                <div class="toggle-text" onclick="resetPhoneLogin()">Change Phone Number</div>
+            </div>
+
+            <div style="margin: 15px 0; text-align: center; color: #888; font-size: 12px;">OR</div>
+            <button class="google-btn" onclick="handleAppLogin()">Sign in with Google</button>
         </div>
-        <div class="delivery-tag">📍 Delivery in 20-30 Mins</div>
-        <input type="text" class="search-box" placeholder="Search Fresh Chicken, Mutton, Fish...">
-        <div class="products-grid">
-            <!-- Item 1 -->
-            <div class="card">
-                <span class="badge">BESTSELLER</span>
-                <img src="https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=500" alt="Chicken">
-                <h4>Fresh Curry Cut Chicken</h4>
-                <div class="rating-row">
-                    <span class="rating-badge">⭐ 4.8</span>
-                    <span class="time-text">20-25 mins</span>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="main-app-container">
+        <div class="app-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="brand-title">🍗 Kaja's Zone</div>
+                <button onclick="logoutApp()" style="background: #3d0c11; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-size: 12px; cursor: pointer;">Logout</button>
+            </div>
+            <div class="delivery-info">📍 Delivery in 20-30 Mins</div>
+            <input type="text" class="search-box" placeholder="Search Fresh Chicken, Mutton, Fish...">
+        </div>
+
+        <!-- Product Grid -->
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="image-container">
+                    <span class="badge badge-bestseller">BESTSELLER</span>
+                    <img src="https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=400" alt="Fresh Curry Cut Chicken">
                 </div>
-                <select class="cut-select">
-                    <option>Curry Cut (Medium)</option>
-                    <option>Small Pieces</option>
-                </select>
-                <div class="old-price">₹220</div>
-                <div class="price-section">
-                    <div class="new-price-row">
-                        <span class="price">₹160</span>
-                        <span class="discount">27% OFF</span>
+                <div class="card-details">
+                    <div class="product-title">Fresh Curry Cut Chicken</div>
+                    <div class="rating-time">★ 4.5 &nbsp; 20-25m</div>
+                    <select class="cut-select"><option>Curry Cut (Medium)</option></select>
+                    <div class="price-row">
+                        <div>
+                            <span class="old-price">₹220</span>
+                            <div><span class="current-price">₹160</span> <span class="discount-tag">27%</span></div>
+                        </div>
+                        <button class="add-btn" onclick="addToCart('Fresh Curry Cut Chicken', 160)">ADD +</button>
                     </div>
-                    <button class="add-btn" onclick="addToCart('Fresh Curry Cut Chicken', 160)">ADD +</button>
                 </div>
             </div>
-            <!-- Item 2 -->
-            <div class="card">
-                <span class="badge" style="background:#f39c12;">POPULAR 🍗</span>
-                <img src="https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=500" alt="Boneless">
-                <h4>Boneless Breast Cut</h4>
-                <div class="rating-row">
-                    <span class="rating-badge">⭐ 4.9</span>
-                    <span class="time-text">20-25 mins</span>
+
+            <div class="product-card">
+                <div class="image-container">
+                    <span class="badge badge-popular">POPULAR 🔥</span>
+                    <img src="https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400" alt="Boneless Breast Cut">
                 </div>
-                <select class="cut-select">
-                    <option>Curry Cut (Medium)</option>
-                    <option>Boneless Cubes</option>
-                </select>
-                <div class="old-price">₹290</div>
-                <div class="price-section">
-                    <div class="new-price-row">
-                        <span class="price">₹230</span>
-                        <span class="discount">20% OFF</span>
+                <div class="card-details">
+                    <div class="product-title">Boneless Breast Cut</div>
+                    <div class="rating-time">★ 4.9 &nbsp; 20-25m</div>
+                    <select class="cut-select"><option>Curry Cut (Medium)</option></select>
+                    <div class="price-row">
+                        <div>
+                            <span class="old-price">₹290</span>
+                            <div><span class="current-price">₹230</span> <span class="discount-tag">20%</span></div>
+                        </div>
+                        <button class="add-btn" onclick="addToCart('Boneless Breast Cut', 230)">ADD +</button>
                     </div>
-                    <button class="add-btn" onclick="addToCart('Boneless Breast Cut', 230)">ADD +</button>
-                </div>
-            </div>
-            <!-- Item 3 -->
-            <div class="card">
-                <span class="badge" style="background:#e74c3c; color:white;">PREMIUM 🥩</span>
-                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=500" alt="Mutton">
-                <h4>Tender Mutton Curry Cut</h4>
-                <div class="rating-row">
-                    <span class="rating-badge">⭐ 4.7</span>
-                    <span class="time-text">25-30 mins</span>
-                </div>
-                <select class="cut-select">
-                    <option>Curry Cut (Medium)</option>
-                    <option>Boneless Mutton</option>
-                </select>
-                <div class="old-price">₹550</div>
-                <div class="price-section">
-                    <div class="new-price-row">
-                        <span class="price">₹450</span>
-                        <span class="discount">18% OFF</span>
-                    </div>
-                    <button class="add-btn" onclick="addToCart('Tender Mutton Curry Cut', 450)">ADD +</button>
-                </div>
-            </div>
-            <!-- Item 4 -->
-            <div class="card">
-                <span class="badge" style="background:#3498db; color:white;">FRESH CATCH 🐟</span>
-                <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=500" alt="Fish">
-                <h4>Fresh Water Fish (Korrameenu)</h4>
-                <div class="rating-row">
-                    <span class="rating-badge">⭐ 4.6</span>
-                    <span class="time-text">25-30 mins</span>
-                </div>
-                <select class="cut-select">
-                    <option>Whole Fish / Cut</option>
-                    <option>Fillet Pieces</option>
-                </select>
-                <div class="old-price">₹400</div>
-                <div class="price-section">
-                    <div class="new-price-row">
-                        <span class="price">₹320</span>
-                        <span class="discount">20% OFF</span>
-                    </div>
-                    <button class="add-btn" onclick="addToCart('Fresh Water Fish', 320)">ADD +</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <h3>📱 Phone Login (OTP)</h3>
-            <p style="font-size: 12px; color: #ff9999;">Enter your phone number to sign in securely.</p>
-            <input type="tel" id="userPhoneInput" placeholder="Phone Number (e.g., 6302650033)">
-            <button class="action-btn" onclick="sendOTP()">Send OTP</button>
-            <div id="otpSection" style="display:none; margin-top: 15px;">
-                <input type="text" id="otpInput" placeholder="Enter 6-digit OTP">
-                <button class="action-btn" style="background:#2980b9;" onclick="verifyOTP()">Verify OTP</button>
-            </div>
-            <div id="recaptcha-container" style="margin-top: 10px;"></div>
-            <button onclick="closeLoginModal()" style="background:none; border:none; color:#aaa; width:100%; margin-top:12px; cursor:pointer;">Close</button>
-        </div>
+    <!-- Floating Cart Bar -->
+    <div id="floating-cart-bar" style="display: none; position: fixed; bottom: 60px; left: 10px; right: 10px; background: #e60023; padding: 12px; border-radius: 8px; justify-content: space-between; align-items: center; cursor: pointer; z-index: 98;" onclick="switchTab('cart')">
+        <div><b><span id="floating-cart-count">0</span> Items</b> | <span id="floating-cart-total">₹0</span></div>
+        <div><b>View Cart &rarr;</b></div>
     </div>
 
-    <!-- Checkout Modal -->
-    <div id="checkoutModal" class="modal">
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="switchTab('home', this)"><span>🏠</span><span>Home</span></div>
+        <div class="nav-item" onclick="switchTab('home', this)"><span>🥩</span><span>Categories</span></div>
+        <div id="nav-orders" class="nav-item" onclick="switchTab('orders', this)"><span>📦</span><span>Orders</span></div>
+        <div class="nav-item" onclick="switchTab('cart', this)"><span>🛒</span><span>Cart</span></div>
+        <div class="nav-item" onclick="switchTab('account', this)"><span>👤</span><span>Account</span></div>
+    </div>
+
+    <!-- Modals -->
+    <div id="cartModal" class="modal">
         <div class="modal-content">
-            <h3>Your Cart & Checkout</h3>
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #2b0a0a; padding: 8px; border-radius: 6px; margin-bottom: 10px;">
-                <span id="cartItemName" style="font-size: 13px;">No item selected</span>
-                <button class="remove-btn" onclick="clearCart()">Remove X</button>
-            </div>
-            <p style="margin: 5px 0; font-size: 14px;">Grand Total: <span id="grandTotal" style="color:#ffcc00; font-weight:bold;">₹0</span></p>
-            <input type="text" id="fullName" placeholder="Full Name *">
-            <input type="tel" id="phoneNumber" placeholder="Phone Number *">
-            <input type="text" id="address" placeholder="Complete Address *">
-            <button class="gps-btn" onclick="getGPSLocation()">📍 Share Live GPS Location</button>
+            <h3>Your Cart</h3>
+            <div id="cart-items-container" style="margin-top: 10px;"></div>
+            <hr style="border-color: #3d0c11; margin: 15px 0;">
+            <h3>Checkout Details</h3>
+            <input type="text" id="cust-name" placeholder="Full Name">
+            <input type="text" id="cust-phone" placeholder="Phone Number">
+            <textarea id="cust-address" placeholder="Delivery Address"></textarea>
             <select id="paymentMethod">
-                <option value="Cash on Delivery">Cash on Delivery (COD)</option>
-                <option value="Razorpay Online Payment">Razorpay Online Payment (UPI/Cards)</option>
+                <option value="Razorpay">Online Payment (Razorpay)</option>
+                <option value="COD">Cash on Delivery (COD)</option>
             </select>
-            <button class="checkout-btn" onclick="placeOrder()">PLACE ORDER NOW</button>
-            <button onclick="closeCheckout()" style="background:none; border:none; color:#aaa; width:100%; margin-top:8px; cursor:pointer;">Close</button>
+            <div style="margin: 10px 0; font-weight: bold;">Total: <span id="total-price">₹0</span></div>
+            <button class="primary-btn" onclick="placeOrder()">Place Order</button>
+            <button onclick="closeModal('cartModal')" style="background: transparent; color: #aaa; border: none; width: 100%; margin-top: 10px; cursor: pointer;">Close</button>
         </div>
     </div>
 
-    <!-- Script Section -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyCNiYPiici8jXntfa3L7yhaashHEqmgzGo",
-            authDomain: "fresh-chicken-d404f.firebaseapp.com",
-            projectId: "fresh-chicken-d404f",
-            storageBucket: "fresh-chicken-d404f.appspot.com",
-            messagingSenderId: "241407573599",
-            appId: "1:241407573599:web:62ef38ddcf4341adcee5ea",
-            measurementId: "G-B7CBGLJQR5"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        
-        let selectedProduct = null;
-        let userLocation = "Not shared";
-        let confirmationResultObj = null;
+    <div id="ordersModal" class="modal">
+        <div class="modal-content">
+            <h3>My Orders</h3>
+            <div id="user-orders-container" style="margin-top: 10px;">Loading...</div>
+            <button class="primary-btn" onclick="closeModal('ordersModal')" style="margin-top: 15px;">Close</button>
+        </div>
+    </div>
 
-        // Make functions globally accessible
-        window.addToCart = function(name, price) {
-            selectedProduct = { name, price };
-            document.getElementById('cartCount').innerText = "1";
-            document.getElementById('cartItemName').innerText = `${name} - ₹${price}`;
-            document.getElementById('grandTotal').innerText = `₹${price}`;
-            alert(name + " added to cart, Bhai!");
-        }
+    <div id="profileModal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <div id="profile-initial" style="width: 50px; height: 50px; background: #e60023; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; margin: 0 auto 10px auto;">U</div>
+            <h3 id="profile-display-name">User</h3>
+            <p id="profile-display-phone" style="color: #aaa; font-size: 13px; margin-top: 4px;"></p>
+            <button class="primary-btn" onclick="promptUpdateProfile()">Edit Name</button>
+            <button onclick="closeModal('profileModal')" style="background: transparent; color: #aaa; border: none; width: 100%; margin-top: 10px; cursor: pointer;">Close</button>
+        </div>
+    </div>
 
-        window.clearCart = function() {
-            selectedProduct = null;
-            document.getElementById('cartCount').innerText = "0";
-            document.getElementById('cartItemName').innerText = "No item selected";
-            document.getElementById('grandTotal').innerText = "₹0";
-        }
-
-        window.openCheckout = function() {
-            if(!selectedProduct) {
-                alert("Please add an item to cart first, Bhai!");
-                return;
-            }
-            document.getElementById('checkoutModal').style.display = 'flex';
-        }
-
-        window.closeCheckout = function() {
-            document.getElementById('checkoutModal').style.display = 'none';
-        }
-
-        window.openLoginModal = function() {
-            document.getElementById('loginModal').style.display = 'flex';
-            if (!window.recaptchaVerifier) {
-                try {
-                    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-                        'size': 'invisible'
-                    });
-                    window.recaptchaVerifier.render().catch(err => console.log(err));
-                } catch (e) {
-                    console.log("Recaptcha error:", e);
-                }
-            }
-        }
-
-        window.closeLoginModal = function() {
-            document.getElementById('loginModal').style.display = 'none';
-        }
-
-        window.sendOTP = function() {
-            let phoneNumber = document.getElementById('userPhoneInput').value.trim();
-            if(!phoneNumber) {
-                alert("దయచేసి ఫోన్ నంబర్ ఎంటర్ చేయండి భాయ్!");
-                return;
-            }
-            if(!phoneNumber.startsWith('+')) {
-                if(phoneNumber.length === 10) {
-                    phoneNumber = '+91' + phoneNumber;
-                } else {
-                    phoneNumber = '+' + phoneNumber;
-                }
-            }
-            const appVerifier = window.recaptchaVerifier;
-            signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-                .then((confirmationResult) => {
-                    confirmationResultObj = confirmationResult;
-                    alert("OTP sent successfully to " + phoneNumber);
-                    document.getElementById('otpSection').style.display = 'block';
-                }).catch((error) => {
-                    console.error("SMS error", error);
-                    alert("Error sending OTP: " + error.message);
-                });
-        }
-
-        window.verifyOTP = function() {
-            const code = document.getElementById('otpInput').value;
-            if(!code) {
-                alert("దయచేసి OTP ఎంటర్ చేయండి భాయ్!");
-                return;
-            }
-            confirmationResultObj.confirm(code).then((result) => {
-                alert("Login Successful, Bhai! 🎉");
-                document.getElementById('loginNavBtn').innerText = "✅ Logged In";
-                closeLoginModal();
-            }).catch((error) => {
-                alert("Invalid OTP! Try again.");
-            });
-        }
-
-        window.getGPSLocation = function() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((position) => {
-                    userLocation = `Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`;
-                    alert("GPS Location fetched successfully, Bhai! 📍");
-                }, () => {
-                    alert("Unable to retrieve your location.");
-                });
-            } else {
-                alert("Geolocation is not supported.");
-            }
-        }
-
-        window.placeOrder = async function() {
-            const name = document.getElementById('fullName').value;
-            const phone = document.getElementById('phoneNumber').value;
-            const address = document.getElementById('address').value;
-            const payment = document.getElementById('paymentMethod').value;
-            if(!name || !phone || !address) {
-                alert("దయచేసి అన్ని వివరాలు (Name, Phone, Address) నింపండి భాయ్!");
-                return;
-            }
-            if(payment === "Razorpay Online Payment") {
-                var options = {
-                    "key": "rzp_live_TMT03OyoVLSYZS",
-                    "amount": selectedProduct.price * 100, 
-                    "currency": "INR",
-                    "name": "Kaja's Chicken Zone",
-                    "description": "Order for " + selectedProduct.name,
-                    "handler": async function (response){
-                        alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
-                        await saveOrderToDB(name, phone, address, "Razorpay Online (" + response.razorpay_payment_id + ")");
-                    },
-                                        "prefill": {
-                        "name": name,
-                        "contact": phone
-                    },
-                    "theme": {
-                        "color": "#e74c3c"
-                    }
-                };
-                var rzp1 = new Razorpay(options);
-                rzp1.open();
-            } else {
-                await saveOrderToDB(name, phone, address, "Cash on Delivery (COD)");
-            }
-        }
-        
+    <!-- Firebase & Razorpay SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="script.js"></script>
+</body>
+    </html>
+    
